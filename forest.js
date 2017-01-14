@@ -19,7 +19,25 @@ function loadData() {
       width: 40,
       height: 60,
       theme: 'green',
-      key: 'hello tree'
+      key: 'hello tree2'
+    },
+    {
+      type: 'cloud',
+      x: 0,
+      y: 80,
+      width: 40,
+      height: 25,
+      theme: 'fluffy',
+      key: 'cloud'
+    },
+    {
+      type: 'cloud',
+      x: 25,
+      y: 80,
+      width: 60,
+      height: 30,
+      theme: 'fluffy',
+      key: 'cloud'
     }
   ];
 }
@@ -55,9 +73,9 @@ d3.select('svg.root')
   .enter()
   .append('g')
   .attr('class', d => d.type)
-  .attr('transform', d => 'translate(' + d.x+ ',' + (yScale(d.y) - d.height) + ')')
+  .attr('transform', d => 'translate(' + xScale(d.x) + ',' + (yScale(d.y) - d.height) + ')')
 
-const recognizedEntities = [TREE];
+const recognizedEntities = [TREE, CLOUD];
 
 function addAllThings() {
   recognizedEntities.forEach(entity => {
