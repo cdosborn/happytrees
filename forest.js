@@ -1,3 +1,6 @@
+/*
+ * Mock "load from localstorage"
+ */
 function loadData() {
   return [
     {
@@ -23,12 +26,19 @@ function loadData() {
 
 const data = loadData()
 
+
+/*
+ * These are values that every drawing function will have access to.
+ */
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
-
 const xScale = d3.scaleLinear().domain([0, 100]).range([0, width]);
 const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+const globals = { width, height, xScale, yScale };
 
+/*
+ * Add a 'g' for each 'thing'
+ */
 d3.select('svg.root')
   .selectAll('g')
   .data(data)
@@ -37,42 +47,25 @@ d3.select('svg.root')
   .attr('class', d => d.type)
   .attr('transform', d => 'translate(' + d.x+ ',' + (yScale(d.y) - d.height) + ')')
 
-function createTrees() {
-  d3.selectAll('.tree')
-    .each(function(d) {
-      d3.select(this).append('rect').classed('trunk', true);
-      d3.select(this).append('circle').classed('leaves', true);
-    });
+/*
+ * Invoke creator for each thing
+ */
+function addAllThings() {
+  createTrees();
 }
 
-function drawTree(time, delta) {
-  return function(d) {
-
-    d3.select(this)
-      .selectAll('.trunk')
-      .transition().duration(delta)
-      .attr('x', -d.width / 2)
-      .attr('y', 0)
-      .attr('width', d.width)
-      .attr('height', d.height)
-      .attr('fill', d.theme);
-
-    d3.select(this)
-      .selectAll('.leaves')
-      .transition().duration(delta)
-      .ease(d3.easeLinear)
-      .attr('cx', 0)
-      .attr('cy', 0)
-      .attr('r', 30 + Math.sin(time * 0.001) * 10)
-      .attr('fill', 'red');
-
-  };
+/*
+ * Update each thing
+ */
+function updateAllThings(t, delta) {
+  d3.selectAll('.tree').each(drawTree(t, delta, globals));
 }
 
-createTrees();
+
+addAllThings();
 let last = Date.now();
 setInterval(function() {
-  d3.selectAll('.tree').each(drawTree(Date.now(), Date.now() - last));
-  last = Date.now();
+  const now = Date.now();
+  updateAllThings(now, now - last);
+  last = now;
 }, 1000);
-
