@@ -11,9 +11,9 @@
     "chrome_url_overrides": {
         "newtab": "forest.html"
     },
-    "description": "Make the current page red",
+    "description": "Find your inner happy tree",
     "manifest_version": 2,
-    "name": "Page Redder",
+    "name": "HappyTrees",
     "permissions": [
         "tabs",
         "http://*/*",
