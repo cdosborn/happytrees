@@ -47,21 +47,23 @@ d3.select('svg.root')
   .attr('class', d => d.type)
   .attr('transform', d => 'translate(' + d.x+ ',' + (yScale(d.y) - d.height) + ')')
 
-/*
- * Invoke creator for each thing
- */
+const recognizedEntities = [TREE];
+
 function addAllThings() {
-  createTrees();
+  recognizedEntities.forEach(entity => {
+    const creator = entity.create(globals);
+    d3.selectAll('.' + entity.name).each(creator);
+  });
 }
 
-/*
- * Update each thing
- */
 function updateAllThings(t, delta) {
-  d3.selectAll('.tree').each(drawTree(t, delta, globals));
+  recognizedEntities.forEach(entity => {
+    const updater = entity.update(t, delta, globals);
+    d3.selectAll('.' + entity.name).each(updater);
+  });
 }
 
-
+// main
 addAllThings();
 let last = Date.now();
 setInterval(function() {

@@ -1,3 +1,11 @@
+/*
+ * Return a function that will be invoked in a d3.each on a group for a
+ * data item, which initializes the DOM state for that data item. The
+ * parameter to the function will be the data item; its 'this' is the d3
+ * selection (?).
+ *
+ * Below is the tree implementation, for example.
+ */
 function createTree(globals) {
   return function(d) {
     d3.select(this).append('rect').classed('trunk', true);
@@ -5,6 +13,14 @@ function createTree(globals) {
   };
 }
 
+/*
+ * Return a function that will be invoked in a d3.each on a group for a
+ * data item, which updates the DOM state for that data item given the
+ * current time data. The parameter to the function will be the data item;
+ * its 'this' is the d3 selection (?).
+ *
+ * Below is the tree implementation, for example.
+ */
 function updateTree(time, delta, globals) {
   return function(d) {
 
@@ -29,8 +45,3 @@ function updateTree(time, delta, globals) {
   };
 }
 
-const TREE = {
-  name: 'tree',
-  create: createTree,
-  update: updateTree
-};
