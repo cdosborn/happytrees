@@ -3,7 +3,9 @@
   "description": "Make the current page red",
   "version": "2.0",
   "permissions": [
-    "tabs"
+    "tabs",
+    "http://*/*",
+    "https://*/*"
   ],
   "background": {
     "scripts": ["background.js"],
