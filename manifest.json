@@ -9,7 +9,7 @@
         "default_title": "Make this page red"
     },
     "chrome_url_overrides": {
-        "newtab": "html/forest.html"
+        "newtab": "index.html"
     },
     "description": "Find your inner happy tree",
     "content_scripts": [
