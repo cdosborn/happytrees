@@ -36,6 +36,16 @@ const xScale = d3.scaleLinear().domain([0, 100]).range([0, width]);
 const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 const globals = { width, height, xScale, yScale };
 
+/* Add sky */
+d3.select('svg.root')
+  .append('rect')
+  .classed('sky', true)
+  .attr('fill', 'url(#Gradient2)')
+  .attr('x', 0)
+  .attr('y', 0)
+  .attr('width', width)
+  .attr('height', height);
+
 /*
  * Add a 'g' for each 'thing'
  */
