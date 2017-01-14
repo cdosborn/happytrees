@@ -27,6 +27,7 @@ function loadData() {
       y: 80,
       width: 40,
       height: 25,
+      speed: 1,
       theme: 'fluffy',
       key: 'cloud'
     },
@@ -36,6 +37,7 @@ function loadData() {
       y: 80,
       width: 60,
       height: 30,
+      speed: 1.4,
       theme: 'fluffy',
       key: 'cloud'
     }
