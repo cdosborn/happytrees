@@ -14,7 +14,7 @@ function makeCloud() {
 clouds = d3.range(1, 5).map(makeCloud);
 
 function f(datas) {
-    data = Array.prototype.concat.apply(datas[datas.length - 1], clouds);
+    data = Array.prototype.concat.apply(clouds, datas[datas.length - 1]);
 
     /*
      * Add a 'g' for each 'thing'

@@ -111,10 +111,16 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 var newUrl = event.payload.tab.url;
                 if (!newState.domains[newUrl]) {
                     var newDomain = initDomain(newUrl);
-                    var urls = Object.keys(newState.domains);
-                    var randTree = newState.domains[urls[Math.floor(Math.random()*urls.length)]];
-                    newDomain.x = randTree.x - 5 + Math.random()*10;
-                    newDomain.y = Math.min(randTree.y - 5 + Math.random()*10, maxTreeHeight);
+                    if (Math.random() < .8) {
+                        newDomain.x = Math.random()*100;
+                        newDomain.y = Math.random()*maxTreeHeight;
+                    }
+                    else {
+                        var urls = Object.keys(newState.domains);
+                        var randTree = newState.domains[urls[Math.floor(Math.random()*urls.length)]];
+                        newDomain.x = randTree.x - 10 + Math.random()*20;
+                        newDomain.y = Math.min(randTree.y - 10 + Math.random()*20, maxTreeHeight);
+                    }
                     newState.domains[newUrl] = newDomain;
                 }
                 
