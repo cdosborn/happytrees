@@ -29,9 +29,10 @@ window.addEventListener("optimizedResize", function() {
         .attr('width', globals.width)
         .attr('height', globals.height);
       let ground = d3.select('#ground')
-        .attr('y', 8 * globals.height / 10)
-        .attr('width', globals.width)
-        .attr('height', 2 * globals.height / 10);
+        .attr('cx', globals.width / 2)
+        .attr('cy', globals.height)
+        .attr('rx', 3 *globals.width / 5)
+        .attr('ry', 4 *globals.height /10);
     }
     d3.select('svg.root')
         .selectAll('g')

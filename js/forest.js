@@ -77,15 +77,17 @@ function makeSkyAndGround(){
     .attr('y', 0)
     .attr('width', globals.width)
     .attr('height', globals.height);
+  
+  // ground stuff
   d3.select('svg.root')
-    .append('rect')
+    .append('ellipse')
     .classed('ground', true)
     .attr('id', 'ground')
-    .attr('fill', 'yellowgreen')
-    .attr('x', 0)
-    .attr('y', 8 *globals.height/10)
-    .attr('width', globals.width)
-    .attr('height', 2* globals.height/10);
+    .attr('fill', 'url(#Gradient1)')
+    .attr('cx', globals.width / 2)
+    .attr('cy', globals.height)
+    .attr('rx', 3 *globals.width / 5)
+    .attr('ry', 4 *globals.height /10);
 }
 makeSkyAndGround();
 const recognizedEntities = [TREE, CLOUD];
