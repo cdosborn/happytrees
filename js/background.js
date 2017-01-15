@@ -10,7 +10,7 @@
 // chrome.runtime.onConnect.addListener(function(port) {
 //     console.log("We've connected to a content script");
 //     port.onMessage.addListener(function(msg) {
-//         console.log("event script received msg:" + msg);   
+//         console.log("event script received msg:" + msg);
 //         port.postMessage({ type: "hello", timestamp: new Date(), payload: {}});
 //     });
 // });
@@ -50,66 +50,77 @@ var initialStorage = {
     log: []
 };
 
-var initialRenderState = {
-    domains: {},
-    activeTab: {
-        tabUrl: null,
-        timestamp: Date.now() 
-    },
-};
 
 // Set initial state, we will want to tweak this when we release
 chrome.storage.sync.set(initialStorage);
 
-// Get storage object with log key
-chrome.storage.sync.get('log', function(storage) {
-    
-    var log = storage.log;
+// Get the current tab, build initial state
+chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
 
-    // REMOVE ME
-    window.log = log;
+    // console.log(arrayOfTabs);
+    // Setup inital state
+    var activeTab = arrayOfTabs && arrayOfTabs[0];
+    var initialRenderState = {
+        domains: {},
+        activeTab: {
+            tabUrl: activeTab.url,
+            timestamp: Date.now()
+        },
+    };
+    initialRenderState.domains[activeTab.url] = {
+        totalTime: 0
+    };
 
-    var lastRenderState = log[log.length - 1] || initialRenderState;
-    renderStream = new Stream(lastRenderState);
+    // Get storage object with log key
+    chrome.storage.sync.get('log', function(storage) {
 
-    renderStream.reduce(function(event, state) {
-        var newState = state;
-        if (event.type == "tabChange") {
-            newState = deepClone(state);
-            var stateDomains = state.domains;
-            var tabUrl = state.activeTab.tabUrl;
-            if (tabUrl) {
-               var domain = stateDomains[tab.url];
-               var newTotalTime;
-               var tabStart = state.activeTab.timestamp;
-               var tabEnd = event.timestamp;
-               if (domain && domain.totalTime != null) {
-                   newTotalTime = domain.totalTime + tabEnd - tabStart;
-                   newState.domains[tabUrl].totalTime = newTotalTime; 
-                   newState.activeTab = {
-                       tabUrl: tabUrl,
-                       timestamp: tabEnd
-                   };
-               }
-               
+        var log = storage.log;
+
+        window.log = log;
+
+        var lastRenderState = log[log.length - 1] || initialRenderState;
+        renderStream = new Stream(lastRenderState);
+
+        renderStream.reduce(function(event, state) {
+            var newState = state;
+
+            if (event.type == "tabChange") {
+                newState = deepClone(state);
+                var stateDomains = state.domains;
+                var tabUrl = state.activeTab.tabUrl;
+                var domain = stateDomains[tabUrl];
+                var tabStart = state.activeTab.timestamp;
+                var tabEnd = event.timestamp;
+                newState.domains[tabUrl] = {
+                    totalTime: domain.totalTime + tabEnd - tabStart
+                };
+
+                var newUrl = event.payload.tab.url;
+                newState.domains[newUrl] = {
+                    totalTime: 0
+                };
+                newState.activeTab = {
+                    tabUrl: newUrl,
+                    timestamp: tabEnd
+                };
             }
-            
-        } 
 
-        return newState;
-    });
-    renderStream.reduce(function(event, state) {
-        log.push(state);
-        chrome.storage.sync.set({'log' : log});
-        return state;
-    });
+            return newState;
+        });
 
-    chrome.tabs.onActivated.addListener(function(activeInfo) {
-        var tabId = activeInfo.tabId;
-        chrome.tabs.get(tabId, function(tab) {
-            console.log("What is the tab's url?", tab.url);
-            renderStream.fire("tabChange", { tab: tab });
-        })
+        renderStream.reduce(function(event, state) {
+            log.push(state);
+            chrome.storage.sync.set({'log' : log});
+            return state;
+        });
+
+        chrome.tabs.onActivated.addListener(function(activeInfo) {
+            var tabId = activeInfo.tabId;
+            chrome.tabs.get(tabId, function(tab) {
+                console.log("What is the tab's url?", tab.url);
+                renderStream.fire("tabChange", { tab: tab });
+            })
+        });
     });
 });
 
