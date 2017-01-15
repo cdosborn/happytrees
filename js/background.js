@@ -121,13 +121,12 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
 
             var domains = state.domains;
             var newState = Object.keys(domains).map(function(url) {
-                console.log(url, domains);
                 return {
                     type: 'tree',
                     x: getRandomInt(0, 100),
                     y: getRandomInt(0, 100),
-                    width: domains[url].totalTime,
-                    height: domains[url].totalTime,
+                    width: domains[url].totalTime/100,
+                    height: domains[url].totalTime/100,
                     theme: themes[getRandomInt(0, themes.length)],
                     key: url
                 }
