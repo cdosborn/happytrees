@@ -55,9 +55,9 @@ function updateTree(time, delta, globals) {
       .selectAll('.leaves')
       .transition().duration(delta)
       .ease(d3.easeLinear)
-      .attr('cx', d => d.cx)
-      .attr('cy', d => d.cy)
-      .attr('r', 30 + Math.sin(time * 0.001) * 10)
+      .attr('cx', e => d.height/40 * e.cx)
+      .attr('cy', e => d.height/40 * e.cy - 5 * d.height)
+      .attr('r', e => Math.max(0, d.height/40 * e.r * (1 + 0.1 * Math.sin(time * 0.001))))
       .attr('fill', d => d.color);
 
   };

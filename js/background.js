@@ -1,20 +1,3 @@
-// // Called when the user clicks on the browser action.
-// chrome.browserAction.onClicked.addListener(function(tab) {
-//   // No tabs or host permissions needed!
-//   console.log('Turning ' + tab.url + ' red!');
-//   chrome.tabs.executeScript({
-//     code: 'document.body.style.backgroundColor="red"'
-//   });
-// });
-
-// chrome.runtime.onConnect.addListener(function(port) {
-//     console.log("We've connected to a content script");
-//     port.onMessage.addListener(function(msg) {
-//         console.log("event script received msg:" + msg);
-//         port.postMessage({ type: "hello", timestamp: new Date(), payload: {}});
-//     });
-// });
-
 function Stream(initial) {
     var reducers = [];
     var state = initial;
