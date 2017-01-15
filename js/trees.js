@@ -1,5 +1,6 @@
 function createTree(globals) {
   return function(d) {
+      console.log('data', d);
     d3.select(this).append('rect').classed('trunk', true);
     d3.select(this).append('circle').classed('leaves', true);
   };

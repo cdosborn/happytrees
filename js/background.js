@@ -116,22 +116,24 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
         });
 
         renderStream.reduce(function(event, state) {
-            var newState = []
             var maxWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             var maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-            for (var url in Object.keys[state.domains]) {
-                newState.push({
+            var domains = state.domains;
+            var newState = Object.keys(domains).map(function(url) {
+                console.log(url, domains);
+                return {
                     type: 'tree',
-                    x: getRandomInt(0, maxWidth),
-                    y: getRandomInt(0, maxHeight),
-                    width: domain[url].totalTime/4000,
-                    height: domain[url].totalTime/1000,
+                    x: getRandomInt(0, 100),
+                    y: getRandomInt(0, 100),
+                    width: domains[url].totalTime,
+                    height: domains[url].totalTime,
                     theme: themes[getRandomInt(0, themes.length)],
                     key: url
-                })
-            }
+                }
+            });
 
+            log.push(newState);
             chrome.storage.sync.set({'log' : log});
             return state;
         });
