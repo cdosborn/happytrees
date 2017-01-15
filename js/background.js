@@ -64,7 +64,7 @@ function initDomain(url) {
 }
 
 // Set initial state, we will want to tweak this when we release
-store.set("log", []);
+// store.set("log", []);
 
 // Get the current tab, build initial state
 chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
