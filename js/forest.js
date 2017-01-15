@@ -11,7 +11,7 @@ function makeCloud() {
     };
 }
 
-clouds = d3.range(1, 5).map(makeCloud);
+clouds = d3.range(1, 15).map(makeCloud);
 
 function f(datas) {
     data = Array.prototype.concat.apply(clouds, datas[datas.length - 1]);

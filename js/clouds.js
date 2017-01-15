@@ -17,13 +17,13 @@ function updateCloud(time, delta, globals) {
   return function(d) {
     if(d.type !== 'cloud') console.log('Tried to updateCloud(Tree)!!!', d.type);
 
-    const xShift = ((time / (d.speed * 100)) % (1.5 * globals.width)) - 0.25 * globals.width;
+    const xShift = ((time / (d.speed * 100)) % (3 * globals.width)) - globals.width;
     const yShift = globals.yScale(d.y);
 
     d3.select(this)
       .selectAll('.outline')
       .attr('fill', 'white')
-      .attr('opacity', '0.5')
+      .attr('opacity', '0.8')
       .attr('d', (d, i) => d(xShift + 15 * i + Math.random() * 5, yShift + 20 * Math.sin(i * 40) + Math.random() * 5));
 
   };
