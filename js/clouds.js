@@ -4,9 +4,7 @@ function createCloud(globals) {
     d3.select(this).selectAll('rect').data(rects).enter().append('rect')
       .classed('outline', true)
       .attr('fill', 'white')
-      .attr('opacity', '0.8')
-      .attr('width', 4*d.width)
-      .attr('height', 4*d.height);
+      .attr('opacity', '0.8');
   };
 }
 
@@ -17,6 +15,8 @@ function updateCloud(time, delta, globals) {
 
     d3.select(this)
       .selectAll('.outline')
+      .attr('width', 4*d.width)
+      .attr('height', 4*d.height)
       .attr('x', (d, i) => xShift + 15 * i + Math.random() * 5)
       .attr('y', (d, i) => yShift + 20 * Math.sin(i * 40) + Math.random() * 5);
 
