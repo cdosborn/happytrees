@@ -41,7 +41,7 @@ const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 const globals = { width, height, xScale, yScale };
 
 /* Add sky */
-function makeSky(){
+function makeSkyAndGround(){
   d3.select('svg.root')
     .append('rect')
     .classed('sky', true)
@@ -57,11 +57,11 @@ function makeSky(){
     .attr('id', 'ground')
     .attr('fill', 'yellowgreen')
     .attr('x', 0)
-    .attr('y', globals.height/2)
+    .attr('y', 8 *globals.height/10)
     .attr('width', globals.width)
-    .attr('height', globals.height);
+    .attr('height', 2* globals.height/10);
 }
-makeSky();
+makeSkyAndGround();
 const recognizedEntities = [TREE, CLOUD];
 
 function addAllThings(sel) {
