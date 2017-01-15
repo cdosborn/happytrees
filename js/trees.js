@@ -35,12 +35,14 @@ console.log(randColor(color));
 function createTree(globals) {
   return function(d) {
     d3.select(this).append('rect').classed('trunk', true);
-    d3.select(this).selectAll('circle').data(nCircles(0, 0, 50, 10, '#5fb54d')).enter().append('circle').classed('leaves', true);
+    d3.select(this).append('rect').classed('branch', true);
+    d3.select(this).append('circle').classed('branch-leaf', true);
+    d3.select(this).selectAll('.leaves').data(nCircles(0, 0, 50, 10, '#5fb54d')).enter().append('circle').classed('leaves', true);
   };
 }
 
 function updateTree(time, delta, globals) {
-  return function(d) {
+  return function(d, i) {
 
     d3.select(this)
       .selectAll('.trunk')
@@ -50,6 +52,29 @@ function updateTree(time, delta, globals) {
       .attr('width', d.width)
       .attr('height', 5 * d.height)
       .attr('fill', d.theme);
+
+    const randBranchAngle = 10*Math.sin(time * 0.001) - 5 + 135;
+
+    d3.select(this)
+      .selectAll('.branch')
+      .transition().duration(delta)
+      .ease(d3.easeLinear)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', 0.2 * d.width)
+      .attr('height', d.height)
+      .attr('transform', e => 'translate(0,'+(-1.5*d.height)+')rotate('+((i%2?-1:1) * randBranchAngle)+')')
+      .attr('fill', d3.color(d.theme).darker());
+
+    d3.select(this)
+      .selectAll('.branch-leaf')
+      .transition().duration(delta)
+      .ease(d3.easeLinear)
+      .attr('cx', 0)
+      .attr('cy', 0)
+      .attr('r', d.height/100 * (40))
+      .attr('transform', e => 'translate(' + ((i%2?1:-1)*0.7 * d.height)+','+(-2.1*d.height)+')rotate('+((i%2?-1:1) * randBranchAngle)+')')
+      .attr('fill', d3.color(randColor('#5fb54d')).darker());
 
     d3.select(this)
       .selectAll('.leaves')

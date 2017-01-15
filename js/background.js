@@ -1,3 +1,4 @@
+var store = new HugeStorageSync();
 function Stream(initial) {
     var reducers = [];
     var state = initial;
@@ -33,10 +34,6 @@ function getRandomInt(min, max) {
 // This is the stream that sets localstorage, it's what triggers renders
 var renderStream;
 
-var initialStorage = {
-    log: []
-};
-
 var maxTreeHeight = 20;
 
 // From https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
@@ -67,12 +64,11 @@ function initDomain(url) {
 }
 
 // Set initial state, we will want to tweak this when we release
-chrome.storage.sync.set(initialStorage);
+store.set("log", []);
 
 // Get the current tab, build initial state
 chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
 
-    // console.log(arrayOfTabs);
     // Setup inital state
     var activeTab = arrayOfTabs && arrayOfTabs[0];
     var initialRenderState = {
@@ -85,9 +81,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
     initialRenderState.domains[activeTab.url] = initDomain(activeTab.url);
 
     // Get storage object with log key
-    chrome.storage.sync.get('log', function(storage) {
-
-        var log = storage.log;
+    store.get('log', function(log) {
 
         window.log = log;
 
@@ -135,14 +129,13 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 window.log = log;
             }
             log.push(Object.keys(newState.domains).map(k => newState.domains[k]));
-            chrome.storage.sync.set({'log' : log});
+            store.set('log', log);
             return newState;
         });
 
         chrome.tabs.onActivated.addListener(function(activeInfo) {
             var tabId = activeInfo.tabId;
             chrome.tabs.get(tabId, function(tab) {
-                console.log("What is the tab's url?", tab.url);
                 renderStream.fire("tabChange", { tab: tab });
             })
         });

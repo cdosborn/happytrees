@@ -2,6 +2,7 @@
     "background": {
         "persistent": false,
         "scripts": [
+            "js/HugeStorageSync.class.js",
             "js/background.js"
         ]
     },

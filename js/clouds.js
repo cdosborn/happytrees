@@ -15,7 +15,6 @@ function createCloud(globals) {
 
 function updateCloud(time, delta, globals) {
   return function(d) {
-    if(d.type !== 'cloud') console.log('Tried to updateCloud(Tree)!!!', d.type);
 
     const xShift = ((time / (d.speed * 100)) % (3 * globals.width)) - globals.width;
     const yShift = globals.yScale(d.y);
