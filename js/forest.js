@@ -64,7 +64,10 @@ const width = document.body.clientWidth;
 const height = document.body.clientHeight;
 const xScale = d3.scaleLinear().domain([0, 100]).range([0, width]);
 const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
-const globals = { width, height, xScale, yScale };
+const globals = { width, height, xScale, yScale, 
+  groundHeight: () =>  4 *globals.height /10 
+  
+};
 
 /* Add sky */
 function makeSkyAndGround(){
@@ -87,7 +90,7 @@ function makeSkyAndGround(){
     .attr('cx', globals.width / 2)
     .attr('cy', globals.height)
     .attr('rx', 3 *globals.width / 5)
-    .attr('ry', 4 *globals.height /10);
+    .attr('ry', globals.groundHeight());
 }
 makeSkyAndGround();
 const recognizedEntities = [TREE, CLOUD];
