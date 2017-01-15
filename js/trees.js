@@ -14,7 +14,7 @@ function updateTree(time, delta, globals) {
       .attr('x', -d.width / 2)
       .attr('y', 0)
       .attr('width', d.width)
-      .attr('height', d.height)
+      .attr('height', 5 * d.height)
       .attr('fill', d.theme);
 
     d3.select(this)
