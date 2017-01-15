@@ -12,8 +12,6 @@
         };
         obj.addEventListener(type, func);
     };
-
-    /* init - you can init any event */
     throttle("resize", "optimizedResize");
 })();
 
