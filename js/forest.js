@@ -16,22 +16,33 @@ clouds = d3.range(1, 5).map(makeCloud);
 function f(datas) {
     data = Array.prototype.concat.apply(clouds, datas[datas.length - 1]);
 
+    function g(d){ console.log("GGGG"); return "URL: " + d.key + "\nTotal time: " + d.totalTime; };
+        function h(d){ console.log("HHHH " + d.totalTime); return "URL: " + d.key + "\nTotal time: " + d.totalTime; };
+
+
     /*
      * Add a 'g' for each 'thing'
      */
     d3.select('svg.root')
         .selectAll('g')
-        .data(data)
+        .data(data, function(d) { return d.key })
         .enter()
         .append('g')
         .attr('class', d => d.type)
-        .call(addAllThings);
+        .call(addAllThings)
+        .append("svg:title")
+          .text(g);
 
     d3.select('svg.root')
         .selectAll('g')
         .attr('transform', function(d) {
             return 'translate(' + xScale(d.x) + ',' + (yScale(d.y) - d.height) + ')';
         })
+
+    d3.select('svg.root')
+      .selectAll('g')
+      .selectAll('title')
+      .text(h)
 
 }
 
