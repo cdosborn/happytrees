@@ -41,15 +41,18 @@ const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 const globals = { width, height, xScale, yScale };
 
 /* Add sky */
-d3.select('svg.root')
-  .append('rect')
-  .classed('sky', true)
-  .attr('fill', 'url(#Gradient2)')
-  .attr('x', 0)
-  .attr('y', 0)
-  .attr('width', width)
-  .attr('height', height);
-
+function makeSky(){
+  return d3.select('svg.root')
+    .append('rect')
+    .classed('sky', true)
+    .attr('id', 'sky')
+    .attr('fill', 'url(#Gradient2)')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', globals.width)
+    .attr('height', globals.height);
+}
+makeSky();
 const recognizedEntities = [TREE, CLOUD];
 
 function addAllThings(sel) {
@@ -71,9 +74,13 @@ function updateAllThings(t, delta) {
 }
 
 // main
-let last = Date.now();
-setInterval(function() {
-    const now = Date.now();
-    updateAllThings(now, now - last);
-    last = now;
-}, 1000);
+
+function make_update (){
+  let last = Date.now();
+  return function updater() {
+      const now = Date.now();
+      updateAllThings(now, now - last);
+      last = now;
+  }
+}
+let interval_code = setInterval(make_update(),  1000);
