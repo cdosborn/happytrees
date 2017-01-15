@@ -13,7 +13,7 @@ function updateTree(time, delta, globals) {
       .selectAll('.trunk')
       .transition().duration(delta)
       .attr('x', -d.width / 2)
-      .attr('y', 0)
+      .attr('y', 5 * -d.height)
       .attr('width', d.width)
       .attr('height', 5 * d.height)
       .attr('fill', d.theme);
@@ -23,7 +23,7 @@ function updateTree(time, delta, globals) {
       .transition().duration(delta)
       .ease(d3.easeLinear)
       .attr('cx', 0)
-      .attr('cy', 0)
+      .attr('cy', 5 * -d.height)
       .attr('r', 30 + Math.sin(time * 0.001) * 10)
       .attr('fill', 'red');
 

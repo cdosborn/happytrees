@@ -78,7 +78,7 @@ function stringToCoords(str) {
     }
 
     var x = Math.abs(hash1 % 100);
-    var y = Math.abs(hash2 % 100);
+    var y = Math.abs(hash2 % 20) + 30;
     return {x, y};
 }
 
