@@ -116,9 +116,6 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
         });
 
         renderStream.reduce(function(event, state) {
-            // log.push(state);
-            // chrome.storage.sync.set({'log' : log});
-            // return state;
             var newState = []
             var maxWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             var maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -134,7 +131,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                     key: url
                 })
             }
-            chrome.storage.sync.set({'log' : newState});
+
+            chrome.storage.sync.set({'log' : log});
             return state;
         });
 
