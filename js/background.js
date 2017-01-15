@@ -135,7 +135,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 })
             }
             chrome.storage.sync.set({'log' : newState});
-            return newState;
+            return state;
         });
 
         chrome.tabs.onActivated.addListener(function(activeInfo) {
