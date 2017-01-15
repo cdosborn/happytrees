@@ -37,6 +37,7 @@ var initialStorage = {
     log: []
 };
 
+var maxTreeHeight = 20;
 
 // From https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
 function stringToColor(str) {
@@ -52,17 +53,17 @@ function stringToColor(str) {
     return colour;
 }
 
-function stringToCoords(str) {
-    var hash1 = 0;
-    var hash2 = 0;
-    for (var i = 0; i < str.length; i++) {
-        hash1 = str.charCodeAt(i) + ((hash1 << 5) - hash1);
-        hash2 = str.charCodeAt(i) + ((hash2 << 7) - hash2);
+function initDomain(url) {
+    return {
+        totalTime: 0,
+        type: 'tree',
+        x: 50,
+        y: 10,
+        width: 10,
+        height: 10,
+        theme: stringToColor(url),
+        key: url
     }
-
-    var x = Math.abs(hash1 % 100);
-    var y = Math.abs(hash2 % 20) + 30;
-    return {x, y};
 }
 
 // Set initial state, we will want to tweak this when we release
@@ -81,9 +82,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
             timestamp: Date.now()
         },
     };
-    initialRenderState.domains[activeTab.url] = {
-        totalTime: 0
-    };
+    initialRenderState.domains[activeTab.url] = initDomain(activeTab.url);
 
     // Get storage object with log key
     chrome.storage.sync.get('log', function(storage) {
@@ -105,41 +104,33 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 var domain = stateDomains[tabUrl];
                 var tabStart = state.activeTab.timestamp;
                 var tabEnd = event.timestamp;
-                newState.domains[tabUrl] = {
-                    totalTime: domain.totalTime + tabEnd - tabStart
-                };
+                newState.domains[tabUrl].totalTime = domain.totalTime + tabEnd - tabStart;
+                newState.domains[tabUrl].width = Math.sqrt(domain.totalTime/1000) + 10;
+                newState.domains[tabUrl].height = Math.sqrt(domain.totalTime/1000) + 10;
 
                 var newUrl = event.payload.tab.url;
-                newState.domains[newUrl] = newState.domains[newUrl] || { totalTime: 0 };
+                if (!newState.domains[newUrl]) {
+                    var newDomain = initDomain(newUrl);
+                    var urls = Object.keys(newState.domains);
+                    var randTree = newState.domains[urls[Math.floor(Math.random()*urls.length)]];
+                    newDomain.x = randTree.x - 5 + Math.random()*10;
+                    newDomain.y = Math.min(randTree.y - 5 + Math.random()*10, maxTreeHeight);
+                    newState.domains[newUrl] = newDomain;
+                }
+                
                 newState.activeTab = {
                     tabUrl: newUrl,
                     timestamp: tabEnd
                 };
             }
 
-            return newState;
-        });
-
-        renderStream.reduce(function(event, state) {
-            var domains = state.domains;
-            var newState = Object.keys(domains).map(function(url) {
-                return {
-                    type: 'tree',
-                    x: stringToCoords(url).x,
-                    y: stringToCoords(url).y,
-                    width: Math.sqrt(domains[url].totalTime/1000) + 10,
-                    height: Math.sqrt(domains[url].totalTime/1000) + 10,
-                    theme: stringToColor(url),
-                    key: url
-                }
-            });
-
             if (log.length > 2) {
                 log = log.slice(log.length - 2);
+                window.log = log;
             }
-            log.push(newState);
+            log.push(Object.keys(newState.domains).map(k => newState.domains[k]));
             chrome.storage.sync.set({'log' : log});
-            return state;
+            return newState;
         });
 
         chrome.tabs.onActivated.addListener(function(activeInfo) {
