@@ -55,8 +55,32 @@ var initialStorage = {
 };
 
 
-// Themes for the trees
-var themes = ['red', 'blue', 'orange', 'purple', 'brown', 'pink', 'black', 'white', 'yellow', 'cyan', 'magenta']
+// From https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
+function stringToColor(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var colour = '#';
+    for (var i = 0; i < 3; i++) {
+        var value = (hash >> (i * 8)) & 0xFF;
+        colour += ('00' + value.toString(16)).substr(-2);
+    }  
+    return colour;
+}
+
+function stringToCoords(str) {
+    var hash1 = 0;
+    var hash2 = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash1 = str.charCodeAt(i) + ((hash1 << 5) - hash1);
+        hash2 = str.charCodeAt(i) + ((hash2 << 7) - hash2);
+    }
+
+    var x = Math.abs(hash1 % 100);
+    var y = Math.abs(hash2 % 100);
+    return {x, y};
+}
 
 // Set initial state, we will want to tweak this when we release
 chrome.storage.sync.set(initialStorage);
@@ -116,18 +140,15 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
         });
 
         renderStream.reduce(function(event, state) {
-            var maxWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-            var maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
             var domains = state.domains;
             var newState = Object.keys(domains).map(function(url) {
                 return {
                     type: 'tree',
-                    x: getRandomInt(0, 100),
-                    y: getRandomInt(0, 100),
+                    x: stringToCoords(url).x,
+                    y: stringToCoords(url).y,
                     width: domains[url].totalTime/100,
                     height: domains[url].totalTime/100,
-                    theme: themes[getRandomInt(0, themes.length)],
+                    theme: stringToColor(url),
                     key: url
                 }
             });
