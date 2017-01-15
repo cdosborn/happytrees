@@ -25,9 +25,9 @@ function HugeStorageSync() {
 		while(value.length > 0) {
 			cacheKey = getCacheKey(key, i);
 			//if you are wondering about -2 at the end see: https://code.google.com/p/chromium/issues/detail?id=261572
-			segment = value.substr(0, chrome.storage.sync.QUOTA_BYTES_PER_ITEM - cacheKey.length - 2);
+			segment = value.substr(0, chrome.storage.sync.QUOTA_BYTES_PER_ITEM/4 - cacheKey.length - 2);
 			cache[cacheKey] = segment;
-			value = value.substr(chrome.storage.sync.QUOTA_BYTES_PER_ITEM - cacheKey.length - 2);
+			value = value.substr(chrome.storage.sync.QUOTA_BYTES_PER_ITEM/4 - cacheKey.length - 2);
 			i++;
 		}
 

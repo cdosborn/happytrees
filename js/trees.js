@@ -17,7 +17,6 @@ function randColor(c) {
 }
 
 function nCircles(x, y, r, n, color) {
-console.log(randColor(color));
     const circles = [{ cx: x, cy: y, r, color: randColor(color) }];
     for(let i = 1; i < n; i++) {
         const circle = {};
