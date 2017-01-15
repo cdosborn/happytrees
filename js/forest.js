@@ -2,46 +2,47 @@
  * Mock "load from localstorage"
  */
 function loadData() {
-  return [
-    {
-      type: 'tree',
-      x: 40,
-      y: 10,
-      width: 25,
-      height: 75,
-      theme: 'blue',
-      key: 'hello tree'
-    },
-    {
-      type: 'tree',
-      x: 60,
-      y: 25,
-      width: 40,
-      height: 60,
-      theme: 'green',
-      key: 'hello tree2'
-    },
-    {
-      type: 'cloud',
-      x: 0,
-      y: 80,
-      width: 40,
-      height: 25,
-      speed: 1,
-      theme: 'fluffy',
-      key: 'cloud'
-    },
-    {
-      type: 'cloud',
-      x: 25,
-      y: 80,
-      width: 60,
-      height: 30,
-      speed: 1.4,
-      theme: 'fluffy',
-      key: 'cloud'
-    }
-  ];
+  // return [
+  //   {
+  //     type: 'tree',
+  //     x: 40,
+  //     y: 10,
+  //     width: 25,
+  //     height: 75,
+  //     theme: 'blue',
+  //     key: 'hello tree'
+  //   },
+  //   {
+  //     type: 'tree',
+  //     x: 60,
+  //     y: 25,
+  //     width: 40,
+  //     height: 60,
+  //     theme: 'green',
+  //     key: 'hello tree2'
+  //   },
+  //   {
+  //     type: 'cloud',
+  //     x: 0,
+  //     y: 80,
+  //     width: 40,
+  //     height: 25,
+  //     speed: 1,
+  //     theme: 'fluffy',
+  //     key: 'cloud'
+  //   },
+  //   {
+  //     type: 'cloud',
+  //     x: 25,
+  //     y: 80,
+  //     width: 60,
+  //     height: 30,
+  //     speed: 1.4,
+  //     theme: 'fluffy',
+  //     key: 'cloud'
+  //   }
+  // ];
+  return window.localstorage('log');
 }
 
 const data = loadData()
