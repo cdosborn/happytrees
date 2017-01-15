@@ -16,9 +16,9 @@ clouds = d3.range(1, 5).map(makeCloud);
 function f(datas) {
     data = Array.prototype.concat.apply(clouds, datas[datas.length - 1]);
 
-    function g(d){ console.log("GGGG"); return "URL: " + d.key + "\nTotal time: " + d.totalTime; };
-        function h(d){ console.log("HHHH " + d.totalTime); return "URL: " + d.key + "\nTotal time: " + d.totalTime; };
-
+    function makeTooltip(d) {
+      return "URL: " + d.key + "\nTotal time: " + d.totalTime;
+    }
 
     /*
      * Add a 'g' for each 'thing'
@@ -31,7 +31,7 @@ function f(datas) {
         .attr('class', d => d.type)
         .call(addAllThings)
         .append("svg:title")
-          .text(g);
+          .text(makeTooltip)
 
     d3.select('svg.root')
         .selectAll('g')
@@ -41,8 +41,8 @@ function f(datas) {
 
     d3.select('svg.root')
       .selectAll('g')
-      .selectAll('title')
-      .text(h)
+      .select('title')
+      .text(makeTooltip)
 
 }
 
