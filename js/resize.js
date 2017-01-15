@@ -22,8 +22,11 @@ window.addEventListener("optimizedResize", function() {
       globals.height = document.body.clientHeight;
       globals.xScale.range([0, globals.width]);
       globals.yScale.range([globals.width, 0]);
-      let sky = document.querySelector("#sky");
-      sky.setAttribute('width', globals.width);
-      sky.setAttribute('height', globals.height);
+      let sky = d3.select("#sky")
+        .attr('width', globals.width)
+        .attr('height', globals.height);
+      let ground = d3.select('#ground')
+        .attr('width', globals.width)
+        .attr('height', globals.height);
     }
 });

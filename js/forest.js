@@ -42,13 +42,22 @@ const globals = { width, height, xScale, yScale };
 
 /* Add sky */
 function makeSky(){
-  return d3.select('svg.root')
+  d3.select('svg.root')
     .append('rect')
     .classed('sky', true)
     .attr('id', 'sky')
     .attr('fill', 'url(#Gradient2)')
     .attr('x', 0)
     .attr('y', 0)
+    .attr('width', globals.width)
+    .attr('height', globals.height);
+  d3.select('svg.root')
+    .append('rect')
+    .classed('ground', true)
+    .attr('id', 'ground')
+    .attr('fill', 'yellowgreen')
+    .attr('x', 0)
+    .attr('y', globals.height/2)
     .attr('width', globals.width)
     .attr('height', globals.height);
 }
