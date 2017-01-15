@@ -105,7 +105,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 var newUrl = event.payload.tab.url;
                 if (!newState.domains[newUrl]) {
                     var newDomain = initDomain(newUrl);
-                    if (Math.random() < .92) {
+                    if (Math.random() > .92) {
                         newDomain.x = Math.random()*100;
                         newDomain.y = Math.random()*maxTreeHeight;
                     }
@@ -117,7 +117,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                     }
                     newState.domains[newUrl] = newDomain;
                 }
-                
+
                 newState.activeTab = {
                     tabUrl: newUrl,
                     timestamp: tabEnd
