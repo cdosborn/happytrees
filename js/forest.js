@@ -64,9 +64,8 @@ const width = document.body.clientWidth;
 const height = document.body.clientHeight;
 const xScale = d3.scaleLinear().domain([0, 100]).range([0, width]);
 const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
-const globals = { width, height, xScale, yScale, 
-  groundHeight: () =>  4 *globals.height /10 
-  
+const globals = { width, height, xScale, yScale,
+  groundHeight: () => 4 * globals.height / 10
 };
 
 /* Add sky */
@@ -80,7 +79,7 @@ function makeSkyAndGround(){
     .attr('y', 0)
     .attr('width', globals.width)
     .attr('height', globals.height);
-  
+
   // ground stuff
   d3.select('svg.root')
     .append('ellipse')
