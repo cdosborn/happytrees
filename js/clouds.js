@@ -6,18 +6,18 @@ function createCloud(globals) {
 
 function updateCloud(time, delta, globals) {
   return function(d) {
+    if(d.type !== 'cloud') console.log('Tried to updateCloud(Tree)!!!', d.type);
 
-    const xShift = ((time / (d.speed * 400)) % (1.5 * globals.width)) - 0.25 * globals.width;
+    const points = d3.range(0, 25).map(() => Math.random() * Math.PI * 2).sort((a,b) => a - b);
+    const xs = points.map(p => Math.cos(p) * 2 * d.width);
+    const ys = points.map(p => Math.sin(p) * 2 * d.height);
+
+    const xShift = ((time / (d.speed * 100)) % (1.5 * globals.width)) - 0.25 * globals.width;
     const yShift = globals.yScale(d.y);
 
-    const M = s => 'M' + s;
-    const L = s => 'L' + s;
-    const p = (x, y) => (x + xShift) + ' ' + (y + yShift);
-    const xe = 2 * d.width;
-    const ye = 2 * d.height;
-    const path = M(p(-xe, -ye)) + L(p(xe, -ye)) +
-                 L(p(xe, ye)) + L(p(-xe, ye)) +
-                 L(p(-xe, -ye));
+    const path = points.map((_, i) => {
+        return (i == 0 ? 'M' : 'L') + xs[i] + ' ' + ys[i];
+    }).join('');
 
     d3.select(this)
       .selectAll('.outline')
