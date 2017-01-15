@@ -1,6 +1,15 @@
+function poly(xr, yr) {
+    const p = (x,y) => ({x,y});
+    const points = [ p(-xr,-yr), p(-xr,yr), p(xr,yr), p(xr,-yr)];
+    return (xshift, yshift) => points.map((p, i) => {
+        return (i == 0 ? 'M' : 'L') + (p.x + xshift) + ' ' + (p.y + yshift);
+    }).join('');
+}
+
 function createCloud(globals) {
   return function(d) {
-    d3.select(this).append('path').classed('outline', true);
+    const paths = d3.range(0, Math.floor(Math.random() * 5 + 4)).map(() => poly(2*d.width, 2*d.height));
+    d3.select(this).selectAll('path').data(paths).enter().append('path').classed('outline', true);
   };
 }
 
@@ -8,22 +17,14 @@ function updateCloud(time, delta, globals) {
   return function(d) {
     if(d.type !== 'cloud') console.log('Tried to updateCloud(Tree)!!!', d.type);
 
-    const points = d3.range(0, 25).map(() => Math.random() * Math.PI * 2).sort((a,b) => a - b);
-    const xs = points.map(p => Math.cos(p) * 2 * d.width);
-    const ys = points.map(p => Math.sin(p) * 2 * d.height);
-
     const xShift = ((time / (d.speed * 100)) % (1.5 * globals.width)) - 0.25 * globals.width;
     const yShift = globals.yScale(d.y);
-
-    const path = points.map((_, i) => {
-        return (i == 0 ? 'M' : 'L') + xs[i] + ' ' + ys[i];
-    }).join('');
 
     d3.select(this)
       .selectAll('.outline')
       .attr('fill', 'white')
       .attr('opacity', '0.5')
-      .attr('d', path);
+      .attr('d', (d, i) => d(xShift + 15 * i + Math.random() * 5, yShift + 20 * Math.sin(i * 40) + Math.random() * 5));
 
   };
 }
