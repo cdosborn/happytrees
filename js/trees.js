@@ -1,8 +1,41 @@
+function randWithinR(x, y, r) {
+    const angle = Math.random() * 360;
+    const x2 = x + Math.cos(angle) * r;
+    const y2 = y + Math.sin(angle) * r;
+    return [x2, y2];
+}
+
+function clamp(l, h, x) { return Math.max(l, Math.min(h, x)); }
+
+function randColor(c) { 
+    const color = d3.color(c); 
+    const shift = 25;
+    const r = clamp(0, 255, color.r + Math.floor(Math.random() * shift - shift/2));
+    const g = clamp(0, 255, color.g + Math.floor(Math.random() * shift - shift/2));
+    const b = clamp(0, 255, color.b + Math.floor(Math.random() * shift - shift/2));
+    return `rgb(${r},${g},${b})`;
+}
+
+function nCircles(x, y, r, n, color) {
+console.log(randColor(color));
+    const circles = [{ cx: x, cy: y, r, color: randColor(color) }];
+    for(let i = 1; i < n; i++) {
+        const circle = {};
+        const coord = randWithinR(x, y, r);
+        circles.push({
+            cx: coord[0],
+            cy: coord[1],
+            r: r * (Math.random() * 0.5 + 0.4),
+            color: randColor(color)
+        });
+    }
+    return circles;
+}
+
 function createTree(globals) {
   return function(d) {
-      console.log('data', d);
     d3.select(this).append('rect').classed('trunk', true);
-    d3.select(this).append('circle').classed('leaves', true);
+    d3.select(this).selectAll('circle').data(nCircles(0, 0, 50, 5, '#5fb54d')).enter().append('circle').classed('leaves', true);
   };
 }
 
@@ -22,10 +55,10 @@ function updateTree(time, delta, globals) {
       .selectAll('.leaves')
       .transition().duration(delta)
       .ease(d3.easeLinear)
-      .attr('cx', 0)
-      .attr('cy', 5 * -d.height)
+      .attr('cx', d => d.cx)
+      .attr('cy', d => d.cy)
       .attr('r', 30 + Math.sin(time * 0.001) * 10)
-      .attr('fill', 'red');
+      .attr('fill', d => d.color);
 
   };
 }

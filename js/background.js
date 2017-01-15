@@ -153,6 +153,9 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 }
             });
 
+            if (log.length > 10) {
+                log = log.slice(log.length - 10);
+            }
             log.push(newState);
             chrome.storage.sync.set({'log' : log});
             return state;

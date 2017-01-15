@@ -28,7 +28,6 @@ chrome.storage.onChanged.addListener(function(changedStorage) {
     if (!('log' in changedStorage)) {
         return;
     }
-
     f(changedStorage.log.newValue);
 });
 
