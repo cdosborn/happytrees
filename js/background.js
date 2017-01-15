@@ -127,8 +127,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                     type: 'tree',
                     x: stringToCoords(url).x,
                     y: stringToCoords(url).y,
-                    width: domains[url].totalTime/100,
-                    height: domains[url].totalTime/100,
+                    width: Math.sqrt(domains[url].totalTime/1000),
+                    height: Math.sqrt(domains[url].totalTime/1000),
                     theme: stringToColor(url),
                     key: url
                 }
