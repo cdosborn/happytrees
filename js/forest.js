@@ -13,8 +13,15 @@ function makeCloud() {
 
 clouds = d3.range(1, 6).map(makeCloud);
 
-function f(datas) {
-    data = Array.prototype.concat.apply(clouds, datas[datas.length - 1] || []);
+function mapLogStateToEntities(log) {
+    let lastState = log[log.length - 1];
+
+    let data = [];
+    if (lastState) {
+        let datas = Object.keys(lastState.domains).map(k => lastState.domains[k]);
+        data = Array.prototype.concat.apply(clouds, datas);
+        console.log(lastState, data, datas);
+    }
 
     function makeTooltip(d) {
       return "URL: " + d.key + "\nTotal time: " + d.totalTime;
@@ -25,7 +32,7 @@ function f(datas) {
      */
     d3.select('svg.root')
         .selectAll('g')
-        .data(data, function(d) { return d.key })
+        .data(data)
         .enter()
         .append('g')
         .attr('class', d => d.type)
@@ -48,8 +55,8 @@ function f(datas) {
 }
 
 var store = new HugeStorageSync();
-store.get('log', f);
-chrome.storage.onChanged.addListener(() => store.get('log', f));
+store.get('log', mapLogStateToEntities);
+chrome.storage.onChanged.addListener(() => store.get('log', mapLogStateToEntities));
 
 /*
  * These are values that every drawing function will have access to.

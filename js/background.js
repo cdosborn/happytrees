@@ -128,7 +128,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 log = log.slice(log.length - 2);
                 window.log = log;
             }
-            log.push(Object.keys(newState.domains).map(k => newState.domains[k]));
+            log.push(newState);
             store.set('log', log);
             return newState;
         });
