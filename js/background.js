@@ -43,6 +43,10 @@ function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // This is the stream that sets localstorage, it's what triggers renders
 var renderStream;
 
@@ -50,6 +54,9 @@ var initialStorage = {
     log: []
 };
 
+
+// Themes for the trees
+var themes = ['red', 'blue', 'orange', 'purple', 'brown', 'pink', 'black', 'white', 'yellow', 'cyan', 'magenta']
 
 // Set initial state, we will want to tweak this when we release
 chrome.storage.sync.set(initialStorage);
@@ -109,7 +116,25 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
         });
 
         renderStream.reduce(function(event, state) {
-            log.push(state);
+            // log.push(state);
+            // chrome.storage.sync.set({'log' : log});
+            // return state;
+            var newState = []
+            var maxWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            var maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+            for (var domain in state.domains) {
+                newState.push({
+                    type: 'tree',
+                    x: getRandomInt(0, maxWidth),
+                    y: getRandomInt(0, maxHeight),
+                    width: domain.totalTime/4000,
+                    height: domain.totalTime/1000,
+                    theme: themes[getRandomInt(0, themes.length)],
+                    key: domain.url
+                })
+            }
+            log.push(JSON.stringify(state));
             chrome.storage.sync.set({'log' : log});
             return state;
         });
@@ -123,4 +148,3 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
         });
     });
 });
-
