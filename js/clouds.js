@@ -7,7 +7,7 @@ function createCloud(globals) {
 function updateCloud(time, delta, globals) {
   return function(d) {
 
-    const xShift = ((time / (d.speed * 100)) % (1.5 * globals.width)) - 0.25 * globals.width;
+    const xShift = ((time / (d.speed * 400)) % (1.5 * globals.width)) - 0.25 * globals.width;
     const yShift = globals.yScale(d.y);
 
     const M = s => 'M' + s;

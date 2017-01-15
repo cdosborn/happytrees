@@ -7,8 +7,8 @@ function randWithinR(x, y, r) {
 
 function clamp(l, h, x) { return Math.max(l, Math.min(h, x)); }
 
-function randColor(c) { 
-    const color = d3.color(c); 
+function randColor(c) {
+    const color = d3.color(c);
     const shift = 25;
     const r = clamp(0, 255, color.r + Math.floor(Math.random() * shift - shift/2));
     const g = clamp(0, 255, color.g + Math.floor(Math.random() * shift - shift/2));
@@ -35,7 +35,7 @@ console.log(randColor(color));
 function createTree(globals) {
   return function(d) {
     d3.select(this).append('rect').classed('trunk', true);
-    d3.select(this).selectAll('circle').data(nCircles(0, 0, 50, 5, '#5fb54d')).enter().append('circle').classed('leaves', true);
+    d3.select(this).selectAll('circle').data(nCircles(0, 0, 50, 20, '#5fb54d')).enter().append('circle').classed('leaves', true);
   };
 }
 

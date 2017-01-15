@@ -48,7 +48,7 @@ function stringToColor(str) {
     for (var i = 0; i < 3; i++) {
         var value = (hash >> (i * 8)) & 0xFF;
         colour += ('00' + value.toString(16)).substr(-2);
-    }  
+    }
     return colour;
 }
 
@@ -127,8 +127,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                     type: 'tree',
                     x: stringToCoords(url).x,
                     y: stringToCoords(url).y,
-                    width: Math.sqrt(domains[url].totalTime/1000),
-                    height: Math.sqrt(domains[url].totalTime/1000),
+                    width: Math.sqrt(domains[url].totalTime/1000) + 10,
+                    height: Math.sqrt(domains[url].totalTime/1000) + 10,
                     theme: stringToColor(url),
                     key: url
                 }

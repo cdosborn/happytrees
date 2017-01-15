@@ -1,7 +1,20 @@
 var data = [];
 
+function makeCloud() {
+    return {
+        type: 'cloud',
+        x: Math.random() * 100,
+        y: 70 + Math.random() * 30,
+        width: 10 + Math.random() * 30,
+        height: 10 + Math.random() * 10,
+        speed: 0.5 + Math.random()
+    };
+}
+
+clouds = d3.range(1, 5).map(makeCloud);
+
 function f(datas) {
-    data = datas[datas.length - 1];
+    data = Array.prototype.concat.apply(datas[datas.length - 1], clouds);
     // console.log("data", data, datas);
 
     /*
@@ -13,10 +26,13 @@ function f(datas) {
         .enter()
         .append('g')
         .attr('class', d => d.type)
+        .call(addAllThings);
+
+    d3.select('svg.root')
+        .selectAll('g')
         .attr('transform', function(d) {
             return 'translate(' + xScale(d.x) + ',' + (yScale(d.y) - d.height) + ')';
         })
-        .call(addAllThings);
 
 }
 
