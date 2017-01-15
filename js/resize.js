@@ -25,7 +25,7 @@ window.addEventListener("optimizedResize", function() {
       let sky = document.querySelector("#sky");
       sky.setAttribute('width', globals.width);
       sky.setAttribute('height', globals.height);
-      let sky = d3.select("#sky")
+      d3.select("#sky")
         .attr('width', globals.width)
         .attr('height', globals.height);
       let ground = d3.select('#ground')

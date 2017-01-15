@@ -15,7 +15,6 @@ clouds = d3.range(1, 5).map(makeCloud);
 
 function f(datas) {
     data = Array.prototype.concat.apply(datas[datas.length - 1], clouds);
-    // console.log("data", data, datas);
 
     /*
      * Add a 'g' for each 'thing'
@@ -81,9 +80,6 @@ makeSkyAndGround();
 const recognizedEntities = [TREE, CLOUD];
 
 function addAllThings(sel) {
-    // console.log(sel);
-    console.log("select all", sel.selectAll('.tree'));
-    window.sel = sel.selectAll('.tree');
     recognizedEntities.forEach(entity => {
         const creator = entity.create(globals);
         sel.filter((d) => d.type == entity.name).each(creator);
