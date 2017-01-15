@@ -110,9 +110,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 };
 
                 var newUrl = event.payload.tab.url;
-                newState.domains[newUrl] = {
-                    totalTime: 0
-                };
+                newState.domains[newUrl] = newState.domains[newUrl] || { totalTime: 0 };
                 newState.activeTab = {
                     tabUrl: newUrl,
                     timestamp: tabEnd
@@ -136,8 +134,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 }
             });
 
-            if (log.length > 10) {
-                log = log.slice(log.length - 10);
+            if (log.length > 2) {
+                log = log.slice(log.length - 2);
             }
             log.push(newState);
             chrome.storage.sync.set({'log' : log});
