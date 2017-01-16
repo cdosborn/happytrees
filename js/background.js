@@ -152,6 +152,10 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                     }
 
                     newState.domains[newUrl] = newDomain;
+
+                    // Clamp tree positions
+                    newDomain.x = Math.min(85, Math.max(15, newDomain.x));
+                    newDomain.y = Math.min(maxTreeHeight, Math.max(5, newDomain.y));
                 }
 
                 newState.activeTab = {
