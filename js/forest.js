@@ -107,6 +107,13 @@ function updateAllThings(t, delta) {
         const updater = entity.update(t, delta, globals);
         d3.selectAll('.' + entity.name).each(updater);
     });
+
+    // Sort entities in descending y coordinate order. This puts the DOM nodes
+    // for the lowest entities on top, which is what we would expect given the
+    // perspective in this scene.
+    d3.select('svg.root')
+      .selectAll('g')
+      .sort((a, b) => b.y - a.y);
 }
 
 // main
