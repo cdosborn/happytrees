@@ -10,7 +10,7 @@
         "16": "icon.png"
     },
     "browser_action": {
-        "default_title": "Find your inner happy tree",
+        "default_title": "Find your inner happy tree"
     },
     "chrome_url_overrides": {
         "newtab": "index.html"
