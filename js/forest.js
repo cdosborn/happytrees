@@ -20,7 +20,6 @@ function mapLogStateToEntities(log) {
     if (lastState) {
         let datas = Object.keys(lastState.domains).map(k => lastState.domains[k]);
         data = Array.prototype.concat.apply(clouds, datas);
-        console.log(lastState, data, datas);
     }
 
     function makeTooltip(d) {

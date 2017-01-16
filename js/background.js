@@ -23,8 +23,29 @@ function Event(type, payload) {
     }
 }
 
+function randomElement(arr) {
+    return arr[Math.floor(Math.random()*arr.length)];
+}
+
 function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
+}
+
+function getDomainName(url) {
+    var domain;
+
+    //find & remove protocol (http, ftp, etc.) and get domain
+    if (url.indexOf("://") > -1) {
+        domain = url.split('/')[2];
+    }
+    else {
+        domain = url.split('/')[0];
+    }
+
+    //find & remove port number
+    domain = domain.split(':')[0];
+
+    return domain;
 }
 
 function getRandomInt(min, max) {
@@ -58,7 +79,7 @@ function initDomain(url) {
         y: 10,
         width: 10,
         height: 10,
-        theme: stringToColor(url),
+        theme: stringToColor(getDomainName(url)),
         key: url
     }
 }
@@ -105,16 +126,27 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 var newUrl = event.payload.tab.url;
                 if (!newState.domains[newUrl]) {
                     var newDomain = initDomain(newUrl);
-                    if (Math.random() > .92) {
+                    var domainName = getDomainName(newUrl);
+                    var urls = Object.keys(newState.domains);
+
+                    var similarUrls = urls.filter(function(url) {
+                        return getDomainName(url) == domainName;
+                    });
+
+                    // Create a tree next to a tree with the same domain
+                    if (similarUrls.length > 0) {
+                        var c = 7;
+                        var randTreeWithSameDomain = newState.domains[randomElement(similarUrls)];
+                        newDomain.x = randTreeWithSameDomain.x - c + Math.random()*2*c;
+                        newDomain.y = Math.min(randTreeWithSameDomain.y - c + Math.random()*2*c, maxTreeHeight);
+
+                    // Create a tree at a random distance
+                    } else {
                         newDomain.x = Math.random()*100;
                         newDomain.y = Math.random()*maxTreeHeight;
                     }
-                    else {
-                        var urls = Object.keys(newState.domains);
-                        var randTree = newState.domains[urls[Math.floor(Math.random()*urls.length)]];
-                        newDomain.x = randTree.x - 10 + Math.random()*20;
-                        newDomain.y = Math.min(randTree.y - 10 + Math.random()*20, maxTreeHeight);
-                    }
+
+
                     newState.domains[newUrl] = newDomain;
                 }
 
