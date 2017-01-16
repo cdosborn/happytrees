@@ -55,7 +55,7 @@ function getRandomInt(min, max) {
 // This is the stream that sets localstorage, it's what triggers renders
 var renderStream;
 
-var maxTreeHeight = 20;
+var maxTreeHeight = 30;
 
 // From https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
 function stringToColor(str) {
@@ -119,9 +119,14 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 var domain = stateDomains[tabUrl];
                 var tabStart = state.activeTab.timestamp;
                 var tabEnd = event.timestamp;
-                newState.domains[tabUrl].totalTime = domain.totalTime + tabEnd - tabStart;
-                newState.domains[tabUrl].width = Math.sqrt(domain.totalTime/1000) + 10;
-                newState.domains[tabUrl].height = Math.sqrt(domain.totalTime/1000) + 10;
+
+                if (!domain) {
+                    domain = initDomain(tabUrl);
+                    newState.domains[tabUrl] = domain;
+                }
+                domain.totalTime += tabEnd - tabStart;
+                domain.width = Math.sqrt(domain.totalTime/1000) + 10;
+                domain.height = Math.sqrt(domain.totalTime/1000) + 10;
 
                 var newUrl = event.payload.tab.url;
                 if (!newState.domains[newUrl]) {
@@ -142,10 +147,9 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
 
                     // Create a tree at a random distance
                     } else {
-                        newDomain.x = Math.random()*100;
-                        newDomain.y = Math.random()*maxTreeHeight;
+                        newDomain.x = 15 + Math.random() * 70;
+                        newDomain.y = 5 + Math.random() * (maxTreeHeight - 10);
                     }
-
 
                     newState.domains[newUrl] = newDomain;
                 }
@@ -156,13 +160,32 @@ chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
                 };
             }
 
+            return newState;
+        });
+
+        // Remove any domains matching chrome://
+        renderStream.reduce(function(event, state) {
+            var newState = deepClone(state);
+
+            var urls = Object.keys(newState.domains);
+            var nonChromeUrls = urls.filter((url) => !/^chrome:\/\//.test(url));
+            newState.domains = {};
+            nonChromeUrls.forEach((url) => {
+                newState.domains[url] = state.domains[url];
+            })
+
+            return newState;
+        });
+
+        // Trim/push the log
+        renderStream.reduce(function(event, state) {
             if (log.length > 2) {
                 log = log.slice(log.length - 2);
                 window.log = log;
             }
-            log.push(newState);
+            log.push(state);
             store.set('log', log);
-            return newState;
+            return state;
         });
 
         chrome.tabs.onActivated.addListener(function(activeInfo) {
